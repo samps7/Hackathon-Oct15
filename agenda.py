@@ -52,6 +52,22 @@ def main():
             text_entry2 = 0
             text_entry3 = 0
             date_entry1 = 0
+            frame1 = tk.LabelFrame(main_window, bg="navy", fg="white", padx=15, pady=15)
+            frame1.grid(row=1, column=0)
+
+            rs = con.cursor()
+            query = 'SELECT class_name, asgn_name FROM assignment'
+
+            # execute the query
+            rs.execute(query)
+            # pretty print the query results:
+            row_count = 0
+            row_count+=1
+            for (class_name, asgn_name) in rs:
+                ##print()
+                row_count += 1
+                label1 = tk.Label(frame1, text='class: {}, asgn: {}'.format(class_name, asgn_name), bg="dark grey", fg="white", font="none 12 bold")
+                label1.grid(row = row_count, column = 1, sticky= 'w')
             
             def leave_classes():
                 
@@ -64,8 +80,6 @@ def main():
             # execute the query
             #rs.execute(query)
 
-            frame1 = tk.LabelFrame(main_window, bg="navy", fg="white", padx=15, pady=15)
-            frame1.grid(row=1, column=0)
             
 
             frame4 = tk.LabelFrame(main_window, bg="navy", fg="white", padx=15, pady=15)
@@ -96,7 +110,24 @@ def main():
             text_entry3 = 0
             date_entry1 = 0
 
-            
+            frame1 = tk.LabelFrame(main_window, bg="navy", fg="white", padx=15, pady=15)
+            frame1.grid(row=1, column=0)
+
+            rs = con.cursor()
+            query = 'SELECT * FROM class'
+
+            # execute the query
+            rs.execute(query)
+            # pretty print the query results:
+            row_count = 0
+            row_count+=1
+            for (class_name) in rs:
+                ##print()
+                row_count += 1
+                label1 = tk.Label(frame1, text='{}'.format(class_name), bg="dark grey", fg="white", font="none 12 bold")
+                label1.grid(row = row_count, column = 1, sticky= 'w')
+
+
             
             def leave_classes():
                 
@@ -108,16 +139,12 @@ def main():
             #query = 'CREATE TABLE '
             # execute the query
             #rs.execute(query)
-
-            frame1 = tk.LabelFrame(main_window, bg="navy", fg="white", padx=15, pady=15)
-            frame1.grid(row=1, column=0)
             
 
             frame4 = tk.LabelFrame(main_window, bg="navy", fg="white", padx=15, pady=15)
             frame4.grid(row=3, column=0)
 
-            row_count = 0
-            row_count+=1
+            
 
             
             output = tk.Button(frame4, text = "Return", width = 6, command = leave_classes)
@@ -153,7 +180,8 @@ def main():
                     con.commit()
                 main_window.destroy()
                 
-                
+            def go_back():
+                main_window.destroy()   
                 
             
             #query = 'CREATE TABLE '
@@ -174,17 +202,14 @@ def main():
             text_entry1 = tk.Entry(frame1, width = 20, bg="white")
             text_entry1.grid(row = row_count, column=2, sticky='w')
             row_count+=1
-
-            label1 = tk.Label(frame1, text="Assignment Name", bg="dark grey", fg="white", font="none 12 bold")
-            label1.grid(row = row_count, column = 1, sticky= 'w')
-            text_entry2 = tk.Entry(frame1, width = 20, bg="white")
-            text_entry2.grid(row = row_count, column=2, sticky='w')
             
-            row_count+=1
 
             
             output = tk.Button(frame4, text = "Enter", width = 6, command = enter_class)
             output.grid(row = 1, column = 0)
+
+            output = tk.Button(frame4, text = "Return", width = 6, command = go_back)
+            output.grid(row = 1, column = 1)
             
 
             main_window.mainloop()
@@ -299,6 +324,9 @@ def main():
                 else:
                     print("class exists")
                     q = "INSERT INTO assignment (class_name, asgn_name, asgn_desc) VALUES (%s,%s,%s)"
+                    rs.execute(q, (text_entry1.get(),text_entry2.get(),text_entry2.get()))
+                    # commit the changes to the DB
+                    con.commit()
                 main_window.destroy()
             
             def go_back():
